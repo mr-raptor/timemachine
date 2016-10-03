@@ -1,0 +1,34 @@
+<!doctype html>
+
+<html ng-app="timeMachine">
+<head>
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+	<script src="https://cdn.knightlab.com/libs/timeline3/latest/js/timeline.js"></script>	
+	<script src="core.js"></script>
+	
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+
+	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+	<link title="timeline-styles" rel="stylesheet" href="https://cdn.knightlab.com/libs/timeline3/latest/css/timeline.css">	
+</head>
+<body ng-controller="mainController">
+    <div id='timeline-embed' style="width: 100%; height: 600px"></div>
+	<p>
+	<md-content layout-padding>
+		<h1>Create event:</h1>
+		<form>
+			<div layout-gt-xs="row">
+				<md-input-container>
+					<input placeholder="Title" ng-model="formData.title">
+				</md-input-container>
+				<md-datepicker ng-model="formData.startDate" md-placeholder="Enter date"></md-datepicker>
+			</div>
+			<md-button class="md-raised md-primary" ng-click="createEvent()">Create</md-button>			
+		</form>
+	</md-content>
+	</p>
+</body>
+</html>
