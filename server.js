@@ -46,6 +46,9 @@ app.post('/api/events', function(req, res) {
 		startDate: new Date(req.body.startDate || new Date()),
 		title: req.body.title
 	};
+	if(req.body.endDate) {
+		newEvent.endDate = new Date(req.body.endDate);
+	}
 	
 	var events = Events();
 	events.insert(newEvent, function() {

@@ -1,7 +1,6 @@
 angular.module('timeMachine', ['ngMaterial', 'ngMessages'])
 	.controller("mainController", function($scope, $http) {
 	$scope.formData = {};
-	$scope.timeLineData = {};
 	
 
 	$http.get('/api/events')
@@ -9,13 +8,7 @@ angular.module('timeMachine', ['ngMaterial', 'ngMessages'])
 			$scope.events = data;
 			console.log("Data from API:")
 			console.dir(data);
-			$scope.timeLineData = mapEvents(data);
-			console.log("Parsed events:");
-			console.dir($scope.timeLineData);
-			window.timeline = new TL.Timeline('timeline-embed', $scope.timeLineData, {
-				timenav_position: "top",
-				debug:true
-			});
+			updateTimeLine(data);
 			
 			/*window.timeline = new Proxy(window.timeline, {
 				set: function(target, prop, value) {
@@ -33,9 +26,7 @@ angular.module('timeMachine', ['ngMaterial', 'ngMessages'])
 		$http.post('/api/events', $scope.formData)
 			.success(function(data) {			
 				$scope.formData = {};
-				$scope.timeLineData = mapEvents(data);
-				//var timeLineData = mapEvents(data);
-				//window.timeline = new TL.Timeline('timeline-embed', timeLineData);
+				updateTimeLine(data);
 			})
 			.error(function(data) {
 				console.log('Error:'+data);
@@ -46,34 +37,59 @@ angular.module('timeMachine', ['ngMaterial', 'ngMessages'])
 		var id = timeline.current_id;
 		$http.delete('/api/events/'+id)
 			.success(function(data) {
-				var timeLineData = mapEvents(data);
-				window.timeline = new TL.Timeline('timeline-embed', timeLineData);
+				updateTimeLine(data);
 			})
 			.error(function(data) {
 				console.log('Error:'+data);
 			});
 	};
 	
+	function updateTimeLine(data)
+	{
+		var timeLineData = mapEvents(data);
+		console.log("Parsed events:");
+		console.dir(timeLineData);
+		window.timeline = new TL.Timeline('timeline-embed', timeLineData, {
+			timenav_position: "top",
+			debug:true
+		});
+	}
+	
 	function mapEvents(data) {
 		return {
-			events: data.map(event => {
-				var date = new Date(event.startDate);
-				return {
-					unique_id: event._id,
-					start_date: mapDate(date),
+			events: data.map(item => {
+				var startDate = new Date(item.startDate);
+				
+				var event = {
+					unique_id: item._id,
+					start_date: mapDate(item.startDate),
+					end_date: mapDate(item.endDate),
 					text: {
-						headline: event.title
+						headline: item.title
 					}
 				}
+				return event;
 			})
 		};
 	}
 	
 	function mapDate(date) {
+		if(date === undefined)
+			return;
+		
+		let dateObj;
+		if(typeof(date) === 'string' || date instanceof String) {
+			dateObj = new Date(date);
+		} else if (date instanceof Date) {
+			dateObj = date;
+		} else {
+			return console.error("Invalid type of date!");			
+		}
+		
 		return {
-			year:date.getFullYear(),
-			month:date.getMonth()+1,
-			day:date.getDate()
+			year:dateObj.getFullYear(),
+			month:dateObj.getMonth()+1,
+			day:dateObj.getDate()
 		};
 	}
 });
