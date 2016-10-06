@@ -1,6 +1,8 @@
 var express = require('express');
 var morgan = require('morgan');
 var bodyParser = require('body-parser');
+var methodOverride = require('method-override');
+var mongodb = require('mongodb');
 
 var db = require('./db');
 var c = require('./config.json');
@@ -12,6 +14,7 @@ app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({'extended':'true'}));
 app.use(bodyParser.json());
 app.use(bodyParser.json({type: 'application/vnd.api+json'}));
+app.use(methodOverride());
 
 db.connect(c.dbConnectionString, function(err) {
 	if(err) {
@@ -26,22 +29,35 @@ db.connect(c.dbConnectionString, function(err) {
 	}
 });
 
+var Events = function() {
+	return db.get().collection('events');
+}
+
 app.get('/api/events', function(req, res) {
-	var events = db.get().collection('events');
-	events.find().toArray(function(err, docs) {
+	Events().find().toArray(function(err, docs) {
 		return res.json(docs);
 	});
 });
 
 app.post('/api/events', function(req, res) {
+	if(!req.body.title)
+		return res.status(500).end('Title is required!');
 	var newEvent = {
-		startDate: new Date(req.body.startDate),
+		startDate: new Date(req.body.startDate || new Date()),
 		title: req.body.title
 	};
 	
-	var events = db.get().collection('events');
+	var events = Events();
 	events.insert(newEvent, function() {
 		events.find().toArray(function(err, docs) {
+			return res.json(docs);
+		});
+	});
+});
+
+app.delete('/api/events/:event_id', function(req, res) {
+	Events().remove({_id: new mongodb.ObjectID(req.params.event_id)}, function() {
+		Events().find().toArray(function(err, docs) {
 			return res.json(docs);
 		});
 	});

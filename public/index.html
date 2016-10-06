@@ -16,6 +16,9 @@
 </head>
 <body ng-controller="mainController">
     <div id='timeline-embed' style="width: 100%; height: 600px"></div>
+	
+	<div ng-view=""></div>
+	<md-button class="md-raised md-primary" ng-click="deleteEvent()">Delete</md-button>
 	<p>
 	<md-content layout-padding>
 		<h1>Create event:</h1>
@@ -24,7 +27,7 @@
 				<md-input-container>
 					<input placeholder="Title" ng-model="formData.title">
 				</md-input-container>
-				<md-datepicker ng-model="formData.startDate" md-placeholder="Enter date"></md-datepicker>
+				<md-datepicker ng-model="formData.startDate" md-placeholder="Start date"></md-datepicker>
 			</div>
 			<md-button class="md-raised md-primary" ng-click="createEvent()">Create</md-button>			
 		</form>
