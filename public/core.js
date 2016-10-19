@@ -1,4 +1,4 @@
-angular.module('timeMachine', ['ngMaterial', 'ngMessages'])
+angular.module('timeMachine', ['ngMaterial', 'ngMessages', 'ngMask'])
 	.controller("mainController", function($scope, $http) {
 	$scope.formData = {};
 	
@@ -43,6 +43,10 @@ angular.module('timeMachine', ['ngMaterial', 'ngMessages'])
 				console.log('Error:'+data);
 			});
 	};
+	
+	$scope.log = function() {
+		console.log($scope.formData.startDate);
+	}
 	
 	function updateTimeLine(data)
 	{

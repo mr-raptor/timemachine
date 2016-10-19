@@ -3,20 +3,28 @@
 <html ng-app="timeMachine">
 <head>
 	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
-	<script src="https://cdn.knightlab.com/libs/timeline3/latest/js/timeline.js"></script>	
-	<script src="core.js"></script>
-	
 	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
-
+	<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+	
+	<script src="bower_components/ngMask/dist/ngMask.min.js"></script>
+	
+	<script src="core.js"></script>
+	
+	<script src="https://cdn.knightlab.com/libs/timeline3/latest/js/timeline.js"></script>
 	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
-	<link title="timeline-styles" rel="stylesheet" href="https://cdn.knightlab.com/libs/timeline3/latest/css/timeline.css">	
+	<link title="timeline-styles" rel="stylesheet" href="https://cdn.knightlab.com/libs/timeline3/latest/css/timeline.css">
+	
+	<script type="text/javascript" src="https://rawgit.com/moment/moment/develop/min/moment.min.js"></script>
+	
+	<link rel="stylesheet" type="text/css" href="daterangepicker.css">	
+	<script type="text/javascript" src="jquery.daterangepicker.js"></script>
 </head>
 <body ng-controller="mainController">
-    <div id='timeline-embed' style="width: 100%; height: 600px"></div>
-	
+    <div id="timeline-embed" style="width: 100%; height: 600px"></div>
+		
 	<div ng-view=""></div>
 	<md-button class="md-raised md-primary" ng-click="deleteEvent()">Delete</md-button>
 	<p>
@@ -27,12 +35,55 @@
 				<md-input-container>
 					<input placeholder="Title" ng-model="formData.title">
 				</md-input-container>
-				<md-datepicker ng-model="formData.startDate" md-placeholder="Start date"></md-datepicker>
+				<md-datepicker ng-model="formData.startDate" ng-change="log()" md-placeholder="Start date"></md-datepicker>
 				<md-datepicker ng-model="formData.endDate" md-placeholder="End date"></md-datepicker>
+			</div>
+			<div id="daterange-picker">
+				<div id="start">
+					<md-input-container>
+						<input placeholder="Year" type="text" ng-model="maskModel" mask="*?9999" restrict="reject" data-ng-pattern="/^(-)?(\d){4}$/" />
+					</md-input-container>
+					<input id="start1" />
+				</div>
+				<input id="daterange-picker-start"/>
+				<input id="daterange-picker-end"/>
+				<div id="daterange-picker-container"></div>
 			</div>
 			<md-button class="md-raised md-primary" ng-click="createEvent()">Create</md-button>			
 		</form>
 	</md-content>
 	</p>
+	
+	<script>
+		$('#daterange-picker-start').keypress(function(event) {
+			event.stopPropagation();
+			$('#daterange-picker').data('dateRangePicker').setDateRange('0-11-03','2015-02-12', true);
+			console.log(new Date($(this).val()));
+		});
+		var options = {
+			separator : ' to ',
+			getValue: function()
+			{
+				if ($('#daterange-picker-start').val() && $('#daterange-picker-end').val() )
+					return $('#daterange-picker-start').val() + ' to ' + $('#daterange-picker-end').val();
+				else
+					return '';
+			},
+			setValue: function(s,s1,s2)
+			{
+				var date = new Date(s1);
+				$('#start1').val(date.getFullYear());
+				$('#daterange-picker-start').val(s1);
+				$('#daterange-picker-end').val(s2);
+			},
+			inline:true,
+			alwaysOpen:true,
+			container:'#daterange-picker-container',
+			hoveringTooltip: false,
+			//singleDate: true,
+		};
+		$('#daterange-picker').dateRangePicker(options);
+	</script>
+
 </body>
 </html>
