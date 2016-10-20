@@ -2,6 +2,7 @@ angular.module('timeMachine', ['ngMaterial', 'ngMessages', 'ngMask'])
 	.controller("mainController", function($scope, $http) {
 	$scope.formData = {};
 	
+	//$scope.datePicker.dateRangePicker(datePickerOptions);
 
 	$http.get('/api/events')
 		.success(function(data) {
@@ -9,7 +10,7 @@ angular.module('timeMachine', ['ngMaterial', 'ngMessages', 'ngMask'])
 			console.log("Data from API:")
 			console.dir(data);
 			updateTimeLine(data);
-			
+			console.dir($scope);
 			/*window.timeline = new Proxy(window.timeline, {
 				set: function(target, prop, value) {
 					console.log(`Change ${prop} = ${value}`);
@@ -46,6 +47,10 @@ angular.module('timeMachine', ['ngMaterial', 'ngMessages', 'ngMask'])
 	
 	$scope.log = function() {
 		console.log($scope.formData.startDate);
+	}
+	
+	$scope.openCalendarYear = function() {
+		console.log($scope.datePicker);
 	}
 	
 	function updateTimeLine(data)
