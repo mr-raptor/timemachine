@@ -21,11 +21,21 @@
 	<script type="text/javascript" src="https://rawgit.com/moment/moment/develop/min/moment.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="daterangepicker.css">	
 	<script type="text/javascript" src="jquery.daterangepicker.js"></script>
+	
+	<script type="text/ng-template" id="/hello.html">
+		<div>
+			Hello!
+			Hello!
+		</div>
+	</script>
 </head>
 <body ng-controller="mainController">
     <div id="timeline-embed" style="width: 100%; height: 600px"></div>
 		
-	<div ng-view=""></div>
+	<div ng-view></div>
+	
+	<a href="/hello">Helllo</a>
+	
 	<md-button class="md-raised md-primary" ng-click="deleteEvent()">Delete</md-button>
 	<p>
 	<md-content layout-padding>
@@ -40,7 +50,13 @@
 			</div>
 			<div id="daterange-picker-container">
 				<md-input-container>
-					<input placeholder="Year" type="text" ng-model="maskModel" ng-change="openCalendarYear()" mask="*99?9?9?" restrict="reject" data-ng-pattern="/^(-(\d){1,4}|(\d){1,5})$/" />
+					<input placeholder="Year" type="text" ng-model="maskModel" mask="*99?9?9?" restrict="reject" data-ng-pattern="/^(-(\d){1,4}|(\d){1,5})$/" />
+				</md-input-container>
+				<md-input-container>
+					<input placeholder="Month" type="text" ng-model="maskModel" mask="*99?9?9?" restrict="reject" data-ng-pattern="/^(-(\d){1,4}|(\d){1,5})$/" />
+				</md-input-container>
+				<md-input-container>
+					<input placeholder="Day" type="text" ng-model="maskModel" mask="*99?9?9?" restrict="reject" data-ng-pattern="/^(-(\d){1,4}|(\d){1,5})$/" />
 				</md-input-container>
 				
 				<div ng-model="datePicker" jqdatepicker year="maskModel"></div>
